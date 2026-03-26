@@ -1,417 +1,445 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NRTA - Next-gen Responsive Training Analytics</title>
-    <meta name="description" content="NRTA – workout aid that scans muscular data per exercise and gives form feedback. Modular interface as a licensable standard for smart prosthetics and wearables. Early-stage concept.">
-    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-    <style>
-        /* Critical CSS to prevent FOUC */
-        html {
-            visibility: hidden;
-        }
-        html.loaded {
-            visibility: visible;
-        }
-    </style>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulsePatch | Emergency CPR Guidance Patch</title>
+  <meta name="description" content="PulsePatch is a stick-on emergency response patch that helps bystanders start and maintain effective CPR during cardiac emergencies.">
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --text: #152238;
+      --muted: #4a5b76;
+      --accent: #0057ff;
+      --accent-strong: #0041c4;
+      --ok: #0f9d58;
+      --border: #dbe3ef;
+      --shadow: 0 10px 28px rgba(21, 34, 56, 0.08);
+      --max: 1100px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    .wrap {
+      width: min(var(--max), 92vw);
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, #091737, #0b2b6c);
+      color: #fff;
+      padding: 1rem 0 4rem;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 0.6rem 0;
+    }
+
+    .brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: #d6e2ff;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .lang-switcher {
+      display: inline-flex;
+      gap: 0.2rem;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 999px;
+      padding: 0.2rem;
+      margin-left: 0.4rem;
+    }
+
+    .lang-btn {
+      border: 0;
+      background: transparent;
+      color: #e4ecff;
+      border-radius: 999px;
+      padding: 0.35rem 0.6rem;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    .lang-btn.active {
+      background: #ffffff;
+      color: #0a2762;
+      font-weight: 600;
+    }
+
+    .hero {
+      margin-top: 2.2rem;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 3vw, 3rem);
+      line-height: 1.15;
+      margin: 0 0 0.8rem;
+    }
+
+    .hero p {
+      color: #d5e0ff;
+      margin: 0 0 1.3rem;
+      max-width: 58ch;
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      backdrop-filter: blur(5px);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.09);
+      border-radius: 10px;
+      padding: 0.7rem;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .stat b { font-size: 1.1rem; display: block; }
+    .stat small { color: #d6e2ff; }
+
+    .cta-row {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.68rem 1rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.94rem;
+    }
+
+    .btn.primary {
+      background: #fff;
+      color: #0a2762;
+    }
+
+    .btn.secondary {
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    section { padding: 3rem 0; }
+
+    .section-head h2 {
+      margin: 0 0 0.4rem;
+      font-size: 1.6rem;
+    }
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 70ch;
+    }
+
+    .grid {
+      margin-top: 1.2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 1rem 0.9rem;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin: 0 0 0.45rem;
+      font-size: 1.05rem;
+    }
+
+    .card p, .card li {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    ul.clean {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    ul.clean li::before {
+      content: "• ";
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .timeline {
+      border-left: 3px solid #bed1ff;
+      margin-top: 1rem;
+      padding-left: 1rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .phase b { color: var(--accent-strong); }
+    .phase small { color: var(--muted); }
+
+    .badge {
+      display: inline-block;
+      background: #ebf2ff;
+      color: #0a3d9f;
+      border: 1px solid #b9d0ff;
+      border-radius: 999px;
+      padding: 0.22rem 0.55rem;
+      font-size: 0.8rem;
+      margin-right: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .risk {
+      border-left: 4px solid #f0b13f;
+      padding-left: 0.7rem;
+    }
+
+    .footer-note {
+      background: #eef3fb;
+      border-top: 1px solid #d7e1f3;
+      color: #44536d;
+      font-size: 0.9rem;
+      padding: 1rem 0;
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid.cols-3 { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .grid.cols-3, .grid.cols-2, .hero-stats { grid-template-columns: 1fr; }
+      .nav-links { font-size: 0.9rem; }
+      header { padding-bottom: 2.4rem; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <div class="nav-logo">
-                <img src="assets/icons/logo.svg" alt="NRTA Logo" class="logo logo-full">
-                <img src="assets/icons/logo-icon.svg" alt="NRTA Logo" class="logo logo-icon">
-            </div>
-            <button class="hamburger-menu" aria-label="Toggle menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-            <a href="#home" class="mobile-home-icon" aria-label="Go to home">
-                <i class="fas fa-home"></i>
-            </a>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#problem">Concept</a></li>
-                <li><a href="#solution">Product</a></li>
-                <li><a href="#market">Market</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+  <header>
+    <div class="wrap">
+      <nav>
+        <div class="brand" data-i18n="nav.brand">PULSEPATCH</div>
+        <div class="nav-links">
+          <a href="#problem" data-i18n="nav.problem">Problem</a>
+          <a href="#solution" data-i18n="nav.solution">Solution</a>
+          <a href="#market" data-i18n="nav.market">Market</a>
+          <a href="#roadmap" data-i18n="nav.roadmap">Roadmap</a>
+          <a href="#invest" data-i18n="nav.investment">Investment</a>
+          <div class="lang-switcher" role="group" aria-label="Language" data-i18n-attr="aria-label:nav.language">
+            <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true">EN</button>
+            <button type="button" class="lang-btn" data-lang="zh-Hant" aria-pressed="false">繁中</button>
+            <button type="button" class="lang-btn" data-lang="hi" aria-pressed="false">हिन्दी</button>
+          </div>
+        </div>
+      </nav>
+
+      <div class="hero">
+        <div>
+          <h1 data-i18n="hero.title">Stick. Detect. Guide. Save.</h1>
+          <p data-i18n="hero.description">
+            PulsePatch is a stick-on emergency response patch designed to help bystanders act fast during sudden cardiac arrest by giving real-time CPR guidance and compression feedback.
+          </p>
+          <div class="cta-row">
+            <a class="btn primary" href="#invest" data-i18n="hero.ctaJoin">Join the Project</a>
+            <a class="btn secondary" href="./documents/PulsePatch_PRD_Professional.pdf" data-i18n="hero.ctaViewPrd">View Full PRD</a>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <h3 data-i18n="heroCard.title">Why this matters</h3>
+          <p data-i18n="heroCard.description">There is a critical gap between collapse and effective intervention. PulsePatch aims to reduce hesitation, improve CPR quality, and buy time until EMS or AED support arrives.</p>
+          <div class="hero-stats">
+            <div class="stat"><b data-i18n="stats.activationValue">&lt; 2 sec</b><small data-i18n="stats.activationLabel">Target activation time</small></div>
+            <div class="stat"><b data-i18n="stats.bpmValue">100-120 BPM</b><small data-i18n="stats.bpmLabel">Guided compression range</small></div>
+            <div class="stat"><b data-i18n="stats.detectionValue">&gt; 90%</b><small data-i18n="stats.detectionLabel">Compression detection target</small></div>
+            <div class="stat"><b data-i18n="stats.priceValue">$40-$120</b><small data-i18n="stats.priceLabel">Initial target unit price</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="problem">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 data-i18n="problem.title">The Problem</h2>
+          <p data-i18n="problem.subtitle">Survival outcomes in sudden cardiac arrest depend on immediate and correct bystander action, but panic and uncertainty often delay or reduce CPR quality.</p>
+        </div>
+        <div class="grid cols-3">
+          <article class="card"><h3 data-i18n="problem.cards.delayTitle">Delayed response</h3><p data-i18n="problem.cards.delayText">Many bystanders hesitate before taking action in high-stress emergencies.</p></article>
+          <article class="card"><h3 data-i18n="problem.cards.techniqueTitle">Technique errors</h3><p data-i18n="problem.cards.techniqueText">Common CPR mistakes include poor rhythm, inconsistent compressions, or no compressions.</p></article>
+          <article class="card"><h3 data-i18n="problem.cards.guidanceTitle">Guidance gap</h3><p data-i18n="problem.cards.guidanceText">AEDs are not always immediately available, and existing monitors do not actively coach intervention.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="solution">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 data-i18n="solution.title">The PulsePatch Solution</h2>
+          <p data-i18n="solution.subtitle">A zero-friction adhesive patch that transitions from detection to active CPR guidance in seconds.</p>
+        </div>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3 data-i18n="solution.howTitle">How it works</h3>
+            <ul class="clean">
+              <li data-i18n="solution.howItems.i1">Stick patch on the chest and auto-activate.</li>
+              <li data-i18n="solution.howItems.i2">Capture ECG and motion signals (IMU-based detection).</li>
+              <li data-i18n="solution.howItems.i3">Trigger coaching mode when no response is detected.</li>
+              <li data-i18n="solution.howItems.i4">Guide compression pace and consistency with real-time feedback.</li>
             </ul>
+          </article>
+          <article class="card">
+            <h3 data-i18n="solution.featuresTitle">Core feature set</h3>
+            <div>
+              <span class="badge" data-i18n="solution.badges.b1">Adhesive chest patch</span>
+              <span class="badge" data-i18n="solution.badges.b2">ECG + IMU sensing</span>
+              <span class="badge" data-i18n="solution.badges.b3">CPR BPM feedback</span>
+              <span class="badge" data-i18n="solution.badges.b4">Metronome + visual cues</span>
+              <span class="badge" data-i18n="solution.badges.b5">Two-minute reassessment cycle</span>
+              <span class="badge" data-i18n="solution.badges.b6">Future BLE + app integration</span>
+            </div>
+          </article>
         </div>
-        <div class="nav-overlay"></div>
-    </nav>
+      </div>
+    </section>
 
-    <!-- Header -->
-    <header id="home" class="startup-hero">
-        <div class="header-content">
-            <div class="hero-text">
-                <div class="concept-badge">
-                    <i class="fas fa-sparkles"></i>
-                    Early-Stage Concept
-                </div>
-                <div class="hero-logo">
-                    <img src="assets/icons/logo-icon.svg" alt="NRTA Logo" class="hero-logo-icon">
-                    <h1>NRTA</h1>
-                </div>
-                <p class="hero-tagline">Next-gen Responsive Training Analytics</p>
-                <p class="hero-description">Workout aid: muscular data per exercise + form feedback. Modular interface as a licensable standard—like HDMI for smart prosthetics.</p>
-            </div>
-            <div class="hero-cta-section">
-                <div class="hero-cta-primary">
-                    <a href="#solution" class="cta-button cta-primary">
-                        <i class="fas fa-rocket"></i>
-                        <span>See How It Works</span>
-                    </a>
-                    <a href="#contact" class="cta-button cta-secondary">
-                        <i class="fas fa-handshake"></i>
-                        <span>Partner With Us</span>
-                    </a>
-                </div>
-            </div>
+    <section id="market">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 data-i18n="market.title">Target Users and Go-To-Market</h2>
+          <p data-i18n="market.subtitle">PulsePatch focuses first on environments where emergency readiness matters and rapid response can save lives.</p>
         </div>
-        <div class="hero-scroll-indicator">
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main>
-        <!-- Problem + Solution (Concept) -->
-        <section id="problem" class="content-section problem-section">
-            <div class="section-header-modern">
-                <h2><i class="fas fa-exclamation-triangle"></i> The Problem</h2>
-                <p class="section-subtitle">Fitness wearables don't tell you which muscles you're actually using—or how to fix your form. The hard problem isn't IMU or basic sensors; it's muscle sensing and turning that into useful feedback.</p>
-            </div>
-            <div class="problem-showcase">
-                <div class="problem-main-card">
-                    <div class="problem-icon-large"><i class="fas fa-question-circle"></i></div>
-                    <h3>Why this, why now?</h3>
-                    <p>We want a workout aid that scans muscular data per exercise and shows more/less involvement by muscle group—then the app tells you how to improve form. No mainstream device does that well. We're also betting on a modular interface: one standard others can build on (smart prosthetics, other wearables). Hardware moat, licensing revenue.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Solution Section (Product) -->
-        <section id="solution" class="content-section">
-            <div class="section-header-modern">
-                <h2><i class="fas fa-lightbulb"></i> The NRTA Concept</h2>
-                <p class="section-subtitle">Workout aid first: muscular data per exercise, form feedback. Then the modular interface as a licensable standard—like HDMI/DisplayPort for smart prosthetics.</p>
-            </div>
-            <div class="startup-card modern-card">
-                <div class="project-header">
-                    <h3>How It Works</h3>
-                    <span class="project-type featured">Concept in Development</span>
-                </div>
-                <div class="project-details">
-                    <p><strong>Product (workout aid):</strong> Scan muscular data per exercise and show which muscle groups are more or less involved. The app uses that to tell you how to improve your form. MCU + IMU is doable; the hard problem we're tackling is muscle sensing.</p>
-                    <p><strong>Platform (interface standard):</strong> The modular connector and protocol are designed so others can adopt them—smart prosthetics, other wearables. We make money on licensing. A hardware moat is always better.</p>
-                </div>
-            </div>
-            <div class="modular-grid">
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-dumbbell"></i>
-                    </div>
-                    <h4>Muscle & Exercise Sensing</h4>
-                    <p>Per-exercise scanning of muscular involvement. The hard problem: reliable muscle sensing (IMU/MCU is the easier part; we're exploring sensing + optional CV tradeoffs for cost).</p>
-                </div>
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h4>Form & Feedback</h4>
-                    <p>App interprets which muscle groups are more/less involved and tells the user how to improve form and target the right muscles for each exercise.</p>
-                </div>
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-plug"></i>
-                    </div>
-                    <h4>Modular Interface (Standard)</h4>
-                    <p>The connector and protocol as a licensable standard—"HDMI for smart prosthetics." Others build devices that plug into the same interface; we license the standard.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Market Section -->
-        <section id="market" class="content-section">
-            <div class="section-header-modern">
-                <h2><i class="fas fa-chart-bar"></i> Market Context</h2>
-                <p class="section-subtitle">Workout aid first; interface standard and licensing next</p>
-            </div>
-            <div class="startup-card">
-                <div class="project-details">
-                    <p><strong>First use case:</strong> Fitness enthusiasts who want real muscular feedback per exercise and form guidance—no mainstream wearable does that well today.</p>
-                    <p><strong>Bigger play:</strong> Position the modular interface as the standard for smart prosthetics and other body-worn devices. We make money on licensing the interface, not just selling one product. Hardware moat, recurring revenue from partners who adopt the standard.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Us Section -->
-        <section id="about" class="content-section">
-            <div class="section-header-modern">
-                <h2><i class="fas fa-users"></i> About NRTA</h2>
-                <p class="section-subtitle">Who we are and what we're looking for</p>
-            </div>
-            <div class="startup-card">
-                <div class="project-details">
-                    <p><strong>NRTA</strong> (Next-gen Responsive Training Analytics) started as a workout aid concept: scan muscular data per exercise, show which muscle groups are more/less involved, and use the app to tell users how to improve their form. We're also designing the modular interface so it can become a licensable standard—like HDMI/DisplayPort for smart prosthetics—with revenue from licensing, not just device sales.</p>
-                    <p>We're in concept phase—no product yet. We're looking for early partners: hardware (muscle sensing, IMU, connectors), investors, or advisors in wearables/prosthetics who want to help shape and build this with us.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="content-section contact-section-redesigned">
-            <div class="section-header-modern">
-                <h2><i class="fas fa-envelope"></i> Get in Touch</h2>
-                <p class="section-subtitle">Interested? Reach out for partnerships, investment, or collaboration.</p>
-            </div>
-            
-            <!-- Contact Information Grid -->
-            <div class="contact-info-redesigned">
-                <div class="contact-methods-grid">
-                    <div class="contact-method-card">
-                        <div class="contact-method-header">
-                            <div class="contact-method-icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                            <h4>Email</h4>
-                        </div>
-                        <div class="contact-method-body">
-                            <p class="contact-label">Primary Contact</p>
-                            <a href="mailto:contact@not-yet-a-thing-email.com" class="contact-value">
-                                contact@not-yet-a-thing-email.com
-                            </a>
-                            <p class="contact-description">For partnerships, investments, and general inquiries</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-method-card">
-                        <div class="contact-method-header">
-                            <div class="contact-method-icon">
-                                <i class="fas fa-cloud"></i>
-                            </div>
-                            <h4>Bluesky</h4>
-                        </div>
-                        <div class="contact-method-body">
-                            <p class="contact-label">Social Media</p>
-                            <a href="#" class="contact-value">
-                                @nrta.bsky.social.not-yet
-                            </a>
-                            <p class="contact-description">Follow us for updates and announcements</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-method-card">
-                        <div class="contact-method-header">
-                            <div class="contact-method-icon">
-                                <i class="fas fa-calendar-check"></i>
-                            </div>
-                            <h4>Schedule a Meeting</h4>
-                        </div>
-                        <div class="contact-method-body">
-                            <p class="contact-label">Book a Call</p>
-                            <a href="mailto:contact@not-yet-a-thing-email.com?subject=Meeting Request" class="contact-value">
-                                Request Meeting
-                            </a>
-                            <p class="contact-description">Let's discuss how we can work together</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Downloads Section -->
-        <!--
-        <section id="downloads" class="content-section">
-            <h2><i class="fas fa-download"></i> Downloads & Resources</h2>
-            <div class="startup-card">
-                <div class="project-header">
-                    <h3>Access NRTA Concept Materials</h3>
-                </div>
-                <div class="project-details">
-                    <p>Download technical specifications, concept materials, and public documentation for the NRTA modular fitness wearable system.</p>
-                    
-                    <div class="download-grid">
-                        <div class="download-card">
-                            <i class="fas fa-file-pdf"></i>
-                            <h4>Executive Summary</h4>
-                            <p>Comprehensive overview of the NRTA concept and business model</p>
-                            <a href="downloads.html" class="download-link">View Details</a>
-                        </div>
-                        <div class="download-card">
-                            <i class="fas fa-microchip"></i>
-                            <h4>Technical Specs</h4>
-                            <p>Detailed technical specifications for the modular platform</p>
-                            <a href="downloads.html" class="download-link">View Details</a>
-                        </div>
-                        <div class="download-card">
-                            <i class="fas fa-chart-line"></i>
-                            <h4>Market Analysis</h4>
-                            <p>Market opportunity and competitive landscape</p>
-                            <a href="downloads.html" class="download-link">View Details</a>
-                        </div>
-                    </div>
-                    
-                    <div class="full-downloads-link">
-                        <a href="downloads.html" class="btn primary">
-                            <i class="fas fa-download"></i> View All Downloads (Coming Soon)
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    -->
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-compact">
-                <a href="#home" class="footer-brand">
-                    <img src="assets/icons/logo-icon.svg" alt="NRTA" class="footer-logo-full">
-                    <span class="footer-year">NRTA - 2026</span>
-                </a>
-                <p class="footer-note">Workout aid + interface standard. Early-stage · licensing.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Back to Top Button -->
-    <button class="back-to-top" aria-label="Back to top">
-        <i class="fas fa-chevron-up"></i>
-    </button>
-
-    <!-- Progress Bar -->
-    <div class="progress-container">
-        <div class="progress-bar"></div>
-    </div>
-
-    <!-- Floating TOC -->
-    <!-- <div class="floating-toc">
-        <button class="toc-toggle" aria-label="Open table of contents">
-            <i class="fas fa-list"></i>
-        </button>
-        <div class="toc-panel">
-            <div class="toc-header">
-                <h3>Contents</h3>
-            </div>
-            <ul class="toc-list">
-                <li class="toc-item"><a href="#home" class="toc-link">Home</a></li>
-                <li class="toc-item"><a href="#problem" class="toc-link">Problem</a></li>
-                <li class="toc-item"><a href="#solution" class="toc-link">Solution</a></li>
-                <li class="toc-item"><a href="#features" class="toc-link">Features</a></li>
-                <li class="toc-item"><a href="#technology" class="toc-link">Technology</a></li>
-                <li class="toc-item"><a href="#market" class="toc-link">Market</a></li>
-                <li class="toc-item"><a href="#vision" class="toc-link">Vision</a></li>
-                <li class="toc-item"><a href="#contact" class="toc-link">Contact</a></li>
+        <div class="grid cols-3">
+          <article class="card">
+            <h3 data-i18n="market.primaryTitle">Primary users</h3>
+            <ul class="clean">
+              <li data-i18n="market.primary.p1">Untrained bystanders</li>
+              <li data-i18n="market.primary.p2">Workplace safety personnel</li>
+              <li data-i18n="market.primary.p3">Gym staff and trainers</li>
+              <li data-i18n="market.primary.p4">School staff</li>
             </ul>
-            <div class="toc-progress">
-                <div class="toc-progress-bar"></div>
-            </div>
+          </article>
+          <article class="card">
+            <h3 data-i18n="market.secondaryTitle">Secondary users</h3>
+            <ul class="clean">
+              <li data-i18n="market.secondary.s1">First responders</li>
+              <li data-i18n="market.secondary.s2">Ambulance crews (pre-AED stage)</li>
+              <li data-i18n="market.secondary.s3">Industrial safety teams</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3 data-i18n="market.businessTitle">Business model</h3>
+            <ul class="clean">
+              <li data-i18n="market.business.b1">Direct device sales</li>
+              <li data-i18n="market.business.b2">Bulk B2B sales (schools, gyms, factories)</li>
+              <li data-i18n="market.business.b3">Future subscription for data and app layer</li>
+            </ul>
+          </article>
         </div>
-    </div>-->
+      </div>
+    </section>
 
-    <!-- Document Modals -->
-    <div id="executive-summary-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>NRTA Executive Summary</h3>
-                <button class="modal-close" onclick="closeDocumentModal('executive-summary-modal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <iframe id="executive-summary-modal-frame" src="" width="100%" height="600px"></iframe>
-            </div>
-            <div class="modal-footer">
-                <!--
-                <button class="download-btn" onclick="downloadDocument('NRTA_Executive_Summary.pdf')">
-                    <i class="fas fa-download"></i> Download PDF
-                </button>
-                -->
-            </div>
+    <section id="roadmap">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 data-i18n="roadmap.title">Development Roadmap</h2>
+          <p data-i18n="roadmap.subtitle">Execution plan from prototype to regulatory pathway and pilot validation.</p>
         </div>
+        <div class="card timeline">
+          <div class="phase"><b data-i18n="roadmap.phases.p1Title">Phase 1 (0-3 months)</b><br><small data-i18n="roadmap.phases.p1Text">IMU-based compression detection, metronome + LED feedback, basic patch form factor.</small></div>
+          <div class="phase"><b data-i18n="roadmap.phases.p2Title">Phase 2 (3-6 months)</b><br><small data-i18n="roadmap.phases.p2Text">ECG integration, state detection logic, improved UX and enclosure design.</small></div>
+          <div class="phase"><b data-i18n="roadmap.phases.p3Title">Phase 3 (6-12 months)</b><br><small data-i18n="roadmap.phases.p3Text">CPR mannequin testing, controlled user studies, iterative feedback optimization.</small></div>
+          <div class="phase"><b data-i18n="roadmap.phases.p4Title">Phase 4 (12+ months)</b><br><small data-i18n="roadmap.phases.p4Text">Clinical trials, FDA submission, certification workflow.</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="invest">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 data-i18n="invest.title">Partnership and Investment Opportunity</h2>
+          <p data-i18n="invest.subtitle">We are looking for collaborators and early supporters to accelerate prototyping, testing, and regulatory preparation.</p>
+        </div>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3 data-i18n="invest.supportTitle">Where support is needed now</h3>
+            <ul class="clean">
+              <li data-i18n="invest.support.s1">Prototype hardware and industrial design refinement</li>
+              <li data-i18n="invest.support.s2">Signal processing and feedback algorithm development</li>
+              <li data-i18n="invest.support.s3">User testing and pilot study setup</li>
+              <li data-i18n="invest.support.s4">Regulatory strategy and clinical validation planning</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3 data-i18n="invest.riskTitle">Current risk profile</h3>
+            <div class="risk">
+              <p data-i18n="invest.riskText">Technical noise and false positives/negatives, regulatory burden (likely Class II path), and high-stress UX clarity are key risks actively considered in the product plan.</p>
+            </div>
+            <p style="margin-top:0.8rem;"><a class="btn" style="background:var(--accent); color:#fff;" href="./documents/PulsePatch_PRD_Professional.pdf" data-i18n="invest.downloadPrd">Download PRD</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-note">
+    <div class="wrap">
+      <span data-i18n="footer.note">PulsePatch is presented as a concept-stage emergency response aid and is not represented here as a diagnostic or defibrillation device.</span>
     </div>
-
-    <div id="tech-specs-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>NRTA Technical Specifications</h3>
-                <button class="modal-close" onclick="closeDocumentModal('tech-specs-modal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <iframe id="tech-specs-modal-frame" src="" width="100%" height="600px"></iframe>
-            </div>
-            <div class="modal-footer">
-                <!--
-                <button class="download-btn" onclick="downloadDocument('NRTA_Technical_Specs.pdf')">
-                    <i class="fas fa-download"></i> Download PDF
-                </button>
-                -->
-            </div>
-        </div>
-    </div>
-
-    <div id="market-analysis-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>NRTA Market Analysis</h3>
-                <button class="modal-close" onclick="closeDocumentModal('market-analysis-modal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <iframe id="market-analysis-modal-frame" src="" width="100%" height="600px"></iframe>
-            </div>
-            <div class="modal-footer">
-                <!--
-                <button class="download-btn" onclick="downloadDocument('NRTA_Market_Analysis.pdf')">
-                    <i class="fas fa-download"></i> Download PDF
-                </button>
-                -->
-            </div>
-        </div>
-    </div>
-
-    <div id="partnership-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>NRTA Partnership Proposal</h3>
-                <button class="modal-close" onclick="closeDocumentModal('partnership-modal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <iframe id="partnership-modal-frame" src="" width="100%" height="600px"></iframe>
-            </div>
-            <div class="modal-footer">
-                <!--
-                <button class="download-btn" onclick="downloadDocument('NRTA_Partnership_Proposal.pdf')">
-                    <i class="fas fa-download"></i> Download PDF
-                </button>
-                -->
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-    <!-- <script src="toc.js"></script> -->
-    <script>
-        // Prevent FOUC - show content when page is ready
-        function showContent() {
-            document.documentElement.classList.add('loaded');
-        }
-        
-        // Try multiple approaches to ensure content shows
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', showContent);
-        } else {
-            showContent();
-        }
-        
-        // Also show content when window loads (after all resources)
-        window.addEventListener('load', showContent);
-    </script>
+  </footer>
+  <script src="i18n.js"></script>
 </body>
 </html>

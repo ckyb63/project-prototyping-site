@@ -1,0 +1,119 @@
+{
+  "metaTitle": "PulsePatch | 緊急 CPR 引導貼片",
+  "metaDescription": "PulsePatch 是可貼附式緊急應對貼片，可在心臟急症時協助旁人快速開始並維持有效 CPR。",
+  "nav": {
+    "brand": "PULSEPATCH",
+    "problem": "問題",
+    "solution": "解決方案",
+    "market": "市場",
+    "roadmap": "路線圖",
+    "investment": "投資合作",
+    "language": "語言"
+  },
+  "hero": {
+    "title": "貼上。偵測。引導。救命。",
+    "description": "PulsePatch 是可貼附式緊急應對貼片，目標是在疑似心臟驟停時，以即時 CPR 引導與按壓回饋協助旁人迅速行動。",
+    "ctaJoin": "加入計畫",
+    "ctaViewPrd": "查看完整 PRD"
+  },
+  "heroCard": {
+    "title": "為什麼重要",
+    "description": "從倒下到有效介入之間存在關鍵空窗。PulsePatch 致力於降低猶豫、提升 CPR 品質，並在 EMS 或 AED 到場前爭取時間。"
+  },
+  "stats": {
+    "activationValue": "< 2 秒",
+    "activationLabel": "目標啟動時間",
+    "bpmValue": "100-120 BPM",
+    "bpmLabel": "引導按壓節奏",
+    "detectionValue": "> 90%",
+    "detectionLabel": "按壓偵測目標",
+    "priceValue": "$40-$120",
+    "priceLabel": "初期單價目標"
+  },
+  "problem": {
+    "title": "核心問題",
+    "subtitle": "心臟驟停的存活率高度仰賴即時且正確的旁人介入，但恐慌與不確定常導致延誤或 CPR 品質不足。",
+    "cards": {
+      "delayTitle": "反應延遲",
+      "delayText": "在高壓急救情境下，多數旁人會先猶豫而延後行動。",
+      "techniqueTitle": "技術偏差",
+      "techniqueText": "常見 CPR 錯誤包含節奏不穩、按壓不連續或未有效按壓。",
+      "guidanceTitle": "引導斷層",
+      "guidanceText": "AED 未必在第一時間可取得，而現有監測工具通常不提供主動引導。"
+    }
+  },
+  "solution": {
+    "title": "PulsePatch 解決方案",
+    "subtitle": "一款零摩擦貼附式裝置，能在數秒內從偵測模式轉為 CPR 主動引導。",
+    "howTitle": "運作方式",
+    "howItems": {
+      "i1": "貼於胸口後自動啟動。",
+      "i2": "擷取 ECG 與動作訊號（IMU 偵測）。",
+      "i3": "在無反應狀態下觸發引導模式。",
+      "i4": "以即時回饋協助維持按壓節奏與一致性。"
+    },
+    "featuresTitle": "核心功能組合",
+    "badges": {
+      "b1": "胸口貼附式設計",
+      "b2": "ECG + IMU 感測",
+      "b3": "CPR 節奏回饋",
+      "b4": "節拍器 + 視覺提示",
+      "b5": "兩分鐘再評估循環",
+      "b6": "未來 BLE + App 整合"
+    }
+  },
+  "market": {
+    "title": "目標使用者與市場切入",
+    "subtitle": "PulsePatch 優先聚焦急救準備需求高、且快速介入能顯著影響結果的場域。",
+    "primaryTitle": "主要使用者",
+    "primary": {
+      "p1": "未受訓旁人",
+      "p2": "職場安全人員",
+      "p3": "健身房員工與教練",
+      "p4": "學校教職員"
+    },
+    "secondaryTitle": "次要使用者",
+    "secondary": {
+      "s1": "第一線救援人員",
+      "s2": "救護車團隊（AED 前階段）",
+      "s3": "工業場域安全團隊"
+    },
+    "businessTitle": "商業模式",
+    "business": {
+      "b1": "設備直接銷售",
+      "b2": "B2B 大宗採購（學校、健身房、工廠）",
+      "b3": "未來數據與 App 訂閱服務"
+    }
+  },
+  "roadmap": {
+    "title": "開發路線圖",
+    "subtitle": "從原型到法規路徑與試點驗證的執行節奏。",
+    "phases": {
+      "p1Title": "第 1 階段（0-3 個月）",
+      "p1Text": "完成 IMU 按壓偵測、節拍器 + LED 回饋、基礎貼片外型。",
+      "p2Title": "第 2 階段（3-6 個月）",
+      "p2Text": "整合 ECG、狀態判斷邏輯，並優化 UX 與外殼設計。",
+      "p3Title": "第 3 階段（6-12 個月）",
+      "p3Text": "進行 CPR 模擬人測試、受控使用者研究與回饋迭代。",
+      "p4Title": "第 4 階段（12+ 個月）",
+      "p4Text": "推進臨床試驗、FDA 送件與認證流程。"
+    }
+  },
+  "invest": {
+    "title": "合作與投資機會",
+    "subtitle": "我們正在尋找合作夥伴與早期支持者，加速原型、測試與法規準備。",
+    "supportTitle": "目前最需要的支持",
+    "support": {
+      "s1": "原型硬體與工業設計優化",
+      "s2": "訊號處理與回饋演算法開發",
+      "s3": "使用者測試與試點研究建置",
+      "s4": "法規策略與臨床驗證規劃"
+    },
+    "riskTitle": "目前風險輪廓",
+    "riskText": "技術面噪訊與誤判風險、法規負擔（可能為 Class II 路徑）以及高壓場景下的 UX 清晰度，皆為目前重點管理風險。",
+    "downloadPrd": "下載 PRD"
+  },
+  "footer": {
+    "note": "PulsePatch 目前以概念階段緊急應對輔助工具定位，並非診斷或去顫設備。"
+  }
+}

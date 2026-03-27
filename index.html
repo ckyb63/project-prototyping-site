@@ -29,6 +29,32 @@
       line-height: 1.6;
     }
 
+    [data-i18n] {
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      will-change: opacity, transform;
+    }
+
+    body.i18n-switching [data-i18n] {
+      opacity: 0.35;
+      transform: translateY(2px);
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     .wrap {
       width: min(var(--max), 92vw);
       margin: 0 auto;
@@ -45,8 +71,8 @@
       justify-content: space-between;
       align-items: center;
       gap: 1rem;
-      flex-wrap: wrap;
       padding: 0.6rem 0;
+      position: relative;
     }
 
     .brand {
@@ -55,16 +81,29 @@
       letter-spacing: 0.04em;
     }
 
+    .nav-main {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
     .nav-links {
       display: flex;
       gap: 0.9rem;
-      flex-wrap: wrap;
+      align-items: center;
     }
 
     .nav-links a {
       color: #d6e2ff;
       text-decoration: none;
       font-size: 0.95rem;
+      white-space: nowrap;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+      transform: translateY(-1px);
     }
 
     .lang-switcher {
@@ -93,12 +132,64 @@
       font-weight: 600;
     }
 
+    .menu-toggle {
+      display: none;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-radius: 10px;
+      width: 42px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 2px;
+      background: #fff;
+      margin: 2px 0;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .menu-toggle.active span:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     .hero {
       margin-top: 2.2rem;
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
       gap: 1.8rem;
       align-items: center;
+      animation: fadeSlideUp 0.65s ease both;
     }
 
     .hero h1 {
@@ -119,6 +210,8 @@
       border-radius: 14px;
       padding: 1rem 1.1rem;
       backdrop-filter: blur(5px);
+      animation: fadeIn 0.8s ease both;
+      animation-delay: 0.15s;
     }
 
     .hero-stats {
@@ -151,6 +244,12 @@
       text-decoration: none;
       font-weight: 600;
       font-size: 0.94rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
 
     .btn.primary {
@@ -161,6 +260,10 @@
     .btn.secondary {
       color: #fff;
       border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .section-head {
+      margin-bottom: 0.35rem;
     }
 
     section { padding: 3rem 0; }
@@ -190,6 +293,12 @@
       border-radius: 14px;
       padding: 1rem 1rem 0.9rem;
       box-shadow: var(--shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(21, 34, 56, 0.12);
     }
 
     .card h3 {
@@ -238,6 +347,11 @@
       font-size: 0.8rem;
       margin-right: 0.4rem;
       margin-bottom: 0.4rem;
+      transition: transform 0.2s ease;
+    }
+
+    .badge:hover {
+      transform: translateY(-1px);
     }
 
     .risk {
@@ -253,15 +367,129 @@
       padding: 1rem 0;
     }
 
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1024px) {
+      header { padding-bottom: 3rem; }
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+      .grid.cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .card { padding: 0.95rem; }
+    }
+
     @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; }
-      .grid.cols-3 { grid-template-columns: 1fr 1fr; }
+      nav {
+        align-items: center;
+      }
+      .menu-toggle {
+        display: inline-flex;
+      }
+      .nav-main {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.55rem);
+        right: 0;
+        left: 0;
+        background: rgba(8, 22, 53, 0.98);
+        border: 1px solid rgba(173, 196, 255, 0.25);
+        border-radius: 12px;
+        padding: 0.75rem;
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.24);
+        z-index: 20;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        opacity: 0;
+        transform: translateY(-6px) scale(0.98);
+        transform-origin: top center;
+      }
+      .nav-main.open {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        transition: opacity 0.24s ease, transform 0.24s ease;
+      }
+      .nav-links {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.55rem;
+      }
+      .nav-links a {
+        width: 100%;
+        padding: 0.25rem 0;
+      }
+      .lang-switcher {
+        margin-left: 0;
+        align-self: flex-start;
+      }
+      .hero h1 {
+        font-size: clamp(1.75rem, 4.8vw, 2.45rem);
+      }
+      section { padding: 2.4rem 0; }
     }
 
     @media (max-width: 700px) {
-      .grid.cols-3, .grid.cols-2, .hero-stats { grid-template-columns: 1fr; }
-      .nav-links { font-size: 0.9rem; }
-      header { padding-bottom: 2.4rem; }
+      .wrap { width: 94vw; }
+      .grid.cols-3,
+      .grid.cols-2,
+      .hero-stats { grid-template-columns: 1fr; }
+      .hero p,
+      .section-head p {
+        font-size: 0.95rem;
+      }
+      .cta-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .cta-row .btn {
+        width: 100%;
+        text-align: center;
+      }
+      .section-head h2 { font-size: 1.35rem; }
+      .card h3 { font-size: 1rem; }
+      .badge { font-size: 0.77rem; }
+      .timeline {
+        padding-left: 0.8rem;
+        gap: 0.7rem;
+      }
+      .footer-note { font-size: 0.84rem; }
+      header { padding-bottom: 2.1rem; }
+    }
+
+    @media (max-width: 480px) {
+      nav { gap: 0.65rem; }
+      .brand { font-size: 1rem; }
+      .nav-links a { font-size: 0.92rem; }
+      .lang-btn {
+        font-size: 0.78rem;
+        padding: 0.3rem 0.52rem;
+      }
+      .hero h1 { line-height: 1.2; }
+      .card p, .card li { font-size: 0.92rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
     }
   </style>
 </head>
@@ -270,12 +498,20 @@
     <div class="wrap">
       <nav>
         <div class="brand" data-i18n="nav.brand">PULSEPATCH</div>
-        <div class="nav-links">
-          <a href="#problem" data-i18n="nav.problem">Problem</a>
-          <a href="#solution" data-i18n="nav.solution">Solution</a>
-          <a href="#market" data-i18n="nav.market">Market</a>
-          <a href="#roadmap" data-i18n="nav.roadmap">Roadmap</a>
-          <a href="#invest" data-i18n="nav.investment">Investment</a>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-main" aria-label="Open menu" data-i18n-attr="aria-label:nav.openMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span class="sr-only" data-i18n="nav.menu">Menu</span>
+        </button>
+        <div class="nav-main" id="nav-main">
+          <div class="nav-links">
+            <a href="#problem" data-i18n="nav.problem">Problem</a>
+            <a href="#solution" data-i18n="nav.solution">Solution</a>
+            <a href="#market" data-i18n="nav.market">Market</a>
+            <a href="#roadmap" data-i18n="nav.roadmap">Roadmap</a>
+            <a href="#invest" data-i18n="nav.investment">Investment</a>
+          </div>
           <div class="lang-switcher" role="group" aria-label="Language" data-i18n-attr="aria-label:nav.language">
             <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true">EN</button>
             <button type="button" class="lang-btn" data-lang="zh-Hant" aria-pressed="false">繁中</button>
@@ -311,7 +547,7 @@
   </header>
 
   <main>
-    <section id="problem">
+    <section id="problem" class="reveal">
       <div class="wrap">
         <div class="section-head">
           <h2 data-i18n="problem.title">The Problem</h2>
@@ -325,7 +561,7 @@
       </div>
     </section>
 
-    <section id="solution">
+    <section id="solution" class="reveal">
       <div class="wrap">
         <div class="section-head">
           <h2 data-i18n="solution.title">The PulsePatch Solution</h2>
@@ -356,7 +592,7 @@
       </div>
     </section>
 
-    <section id="market">
+    <section id="market" class="reveal">
       <div class="wrap">
         <div class="section-head">
           <h2 data-i18n="market.title">Target Users and Go-To-Market</h2>
@@ -392,7 +628,7 @@
       </div>
     </section>
 
-    <section id="roadmap">
+    <section id="roadmap" class="reveal">
       <div class="wrap">
         <div class="section-head">
           <h2 data-i18n="roadmap.title">Development Roadmap</h2>
@@ -407,7 +643,7 @@
       </div>
     </section>
 
-    <section id="invest">
+    <section id="invest" class="reveal">
       <div class="wrap">
         <div class="section-head">
           <h2 data-i18n="invest.title">Partnership and Investment Opportunity</h2>
@@ -441,5 +677,73 @@
     </div>
   </footer>
   <script src="i18n.js"></script>
+  <script>
+    (function () {
+      var toggle = document.getElementById('menu-toggle');
+      var navMain = document.getElementById('nav-main');
+      if (!toggle || !navMain) return;
+
+      function closeMenu() {
+        navMain.classList.remove('open');
+        toggle.classList.remove('active');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+
+      function openMenu() {
+        navMain.classList.add('open');
+        toggle.classList.add('active');
+        toggle.setAttribute('aria-expanded', 'true');
+      }
+
+      toggle.addEventListener('click', function () {
+        if (navMain.classList.contains('open')) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      });
+
+      navMain.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          if (window.innerWidth <= 900) closeMenu();
+        });
+      });
+
+      document.addEventListener('click', function (event) {
+        if (window.innerWidth > 900) return;
+        var inMenu = navMain.contains(event.target);
+        var inToggle = toggle.contains(event.target);
+        if (!inMenu && !inToggle) closeMenu();
+      });
+
+      window.addEventListener('resize', function () {
+        if (window.innerWidth > 900) closeMenu();
+      });
+    })();
+  </script>
+  <script>
+    (function () {
+      var revealEls = document.querySelectorAll('.reveal');
+      if (!revealEls.length) return;
+
+      if (!('IntersectionObserver' in window)) {
+        revealEls.forEach(function (el) { el.classList.add('in-view'); });
+        return;
+      }
+
+      var observer = new IntersectionObserver(function (entries, obs) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      revealEls.forEach(function (el) {
+        observer.observe(el);
+      });
+    })();
+  </script>
 </body>
 </html>

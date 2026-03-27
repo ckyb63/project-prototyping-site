@@ -8,7 +8,9 @@
     "market": "Market",
     "roadmap": "Roadmap",
     "investment": "Investment",
-    "language": "Language"
+    "language": "Language",
+    "openMenu": "Open menu",
+    "menu": "Menu"
   },
   "hero": {
     "title": "Stick. Detect. Guide. Save.",

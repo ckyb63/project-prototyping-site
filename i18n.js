@@ -49,6 +49,30 @@
     document.documentElement.lang = lang;
   }
 
+  function prefersReducedMotion() {
+    try {
+      return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function animateLanguageSwap(applyFn) {
+    var body = document.body;
+    if (!body || prefersReducedMotion()) {
+      applyFn();
+      return;
+    }
+
+    body.classList.add('i18n-switching');
+    setTimeout(function () {
+      applyFn();
+      requestAnimationFrame(function () {
+        body.classList.remove('i18n-switching');
+      });
+    }, 110);
+  }
+
   function applyTranslations(t) {
     if (!t) return;
 
@@ -109,9 +133,11 @@
     setStoredLang(lang);
     setDocumentLang(lang);
     loadLocale(lang, function (t) {
-      applyTranslations(t);
-      updateSwitcherUI(lang);
-      if (callback) callback();
+      animateLanguageSwap(function () {
+        applyTranslations(t);
+        updateSwitcherUI(lang);
+        if (callback) callback();
+      });
     });
   }
 

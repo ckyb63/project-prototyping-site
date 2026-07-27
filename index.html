@@ -3,749 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PulsePatch | Emergency CPR Guidance Patch</title>
-  <meta name="description" content="PulsePatch is a stick-on emergency response patch that helps bystanders start and maintain effective CPR during cardiac emergencies.">
-  <style>
-    :root {
-      --bg: #f6f8fb;
-      --surface: #ffffff;
-      --text: #152238;
-      --muted: #4a5b76;
-      --accent: #0057ff;
-      --accent-strong: #0041c4;
-      --ok: #0f9d58;
-      --border: #dbe3ef;
-      --shadow: 0 10px 28px rgba(21, 34, 56, 0.08);
-      --max: 1100px;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.6;
-    }
-
-    [data-i18n] {
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      will-change: opacity, transform;
-    }
-
-    body.i18n-switching [data-i18n] {
-      opacity: 0.35;
-      transform: translateY(2px);
-    }
-
-    @keyframes fadeSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(18px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .wrap {
-      width: min(var(--max), 92vw);
-      margin: 0 auto;
-    }
-
-    header {
-      background: linear-gradient(135deg, #091737, #0b2b6c);
-      color: #fff;
-      padding: 1rem 0 4rem;
-    }
-
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.6rem 0;
-      position: relative;
-    }
-
-    .brand {
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-
-    .nav-main {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 0.9rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: #d6e2ff;
-      text-decoration: none;
-      font-size: 0.95rem;
-      white-space: nowrap;
-      transition: color 0.2s ease, transform 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: #ffffff;
-      transform: translateY(-1px);
-    }
-
-    .lang-switcher {
-      display: inline-flex;
-      gap: 0.2rem;
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      border-radius: 999px;
-      padding: 0.2rem;
-      margin-left: 0.4rem;
-    }
-
-    .lang-btn {
-      border: 0;
-      background: transparent;
-      color: #e4ecff;
-      border-radius: 999px;
-      padding: 0.35rem 0.6rem;
-      font-size: 0.82rem;
-      cursor: pointer;
-    }
-
-    .lang-btn.active {
-      background: #ffffff;
-      color: #0a2762;
-      font-weight: 600;
-    }
-
-    .menu-toggle {
-      display: none;
-      border: 1px solid rgba(255, 255, 255, 0.45);
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-      border-radius: 10px;
-      width: 42px;
-      height: 38px;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .menu-toggle span {
-      display: block;
-      width: 18px;
-      height: 2px;
-      border-radius: 2px;
-      background: #fff;
-      margin: 2px 0;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    .menu-toggle:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-1px);
-    }
-
-    .menu-toggle.active span:nth-child(1) {
-      transform: translateY(6px) rotate(45deg);
-    }
-    .menu-toggle.active span:nth-child(2) {
-      opacity: 0;
-    }
-    .menu-toggle.active span:nth-child(3) {
-      transform: translateY(-6px) rotate(-45deg);
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .hero {
-      margin-top: 2.2rem;
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 1.8rem;
-      align-items: center;
-      animation: fadeSlideUp 0.65s ease both;
-    }
-
-    .hero h1 {
-      font-size: clamp(1.9rem, 3vw, 3rem);
-      line-height: 1.15;
-      margin: 0 0 0.8rem;
-    }
-
-    .hero p {
-      color: #d5e0ff;
-      margin: 0 0 1.3rem;
-      max-width: 58ch;
-    }
-
-    .hero-card {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 14px;
-      padding: 1rem 1.1rem;
-      backdrop-filter: blur(5px);
-      animation: fadeIn 0.8s ease both;
-      animation-delay: 0.15s;
-    }
-
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.7rem;
-      margin-top: 1rem;
-    }
-
-    .stat {
-      background: rgba(255, 255, 255, 0.09);
-      border-radius: 10px;
-      padding: 0.7rem;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-    }
-
-    .stat b { font-size: 1.1rem; display: block; }
-    .stat small { color: #d6e2ff; }
-
-    .cta-row {
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.68rem 1rem;
-      border-radius: 999px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.94rem;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn.primary {
-      background: #fff;
-      color: #0a2762;
-    }
-
-    .btn.secondary {
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-
-    .section-head {
-      margin-bottom: 0.35rem;
-    }
-
-    section { padding: 3rem 0; }
-
-    .section-head h2 {
-      margin: 0 0 0.4rem;
-      font-size: 1.6rem;
-    }
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 70ch;
-    }
-
-    .grid {
-      margin-top: 1.2rem;
-      display: grid;
-      gap: 1rem;
-    }
-
-    .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
-    .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1rem 1rem 0.9rem;
-      box-shadow: var(--shadow);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 30px rgba(21, 34, 56, 0.12);
-    }
-
-    .card h3 {
-      margin: 0 0 0.45rem;
-      font-size: 1.05rem;
-    }
-
-    .card p, .card li {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    ul.clean {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: 0.55rem;
-    }
-
-    ul.clean li::before {
-      content: "• ";
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .timeline {
-      border-left: 3px solid #bed1ff;
-      margin-top: 1rem;
-      padding-left: 1rem;
-      display: grid;
-      gap: 0.8rem;
-    }
-
-    .phase b { color: var(--accent-strong); }
-    .phase small { color: var(--muted); }
-
-    .badge {
-      display: inline-block;
-      background: #ebf2ff;
-      color: #0a3d9f;
-      border: 1px solid #b9d0ff;
-      border-radius: 999px;
-      padding: 0.22rem 0.55rem;
-      font-size: 0.8rem;
-      margin-right: 0.4rem;
-      margin-bottom: 0.4rem;
-      transition: transform 0.2s ease;
-    }
-
-    .badge:hover {
-      transform: translateY(-1px);
-    }
-
-    .risk {
-      border-left: 4px solid #f0b13f;
-      padding-left: 0.7rem;
-    }
-
-    .footer-note {
-      background: #eef3fb;
-      border-top: 1px solid #d7e1f3;
-      color: #44536d;
-      font-size: 0.9rem;
-      padding: 1rem 0;
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.55s ease, transform 0.55s ease;
-    }
-
-    .reveal.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 1024px) {
-      header { padding-bottom: 3rem; }
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 1.2rem;
-      }
-      .grid.cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .card { padding: 0.95rem; }
-    }
-
-    @media (max-width: 900px) {
-      nav {
-        align-items: center;
-      }
-      .menu-toggle {
-        display: inline-flex;
-      }
-      .nav-main {
-        display: none;
-        position: absolute;
-        top: calc(100% + 0.55rem);
-        right: 0;
-        left: 0;
-        background: rgba(8, 22, 53, 0.98);
-        border: 1px solid rgba(173, 196, 255, 0.25);
-        border-radius: 12px;
-        padding: 0.75rem;
-        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.24);
-        z-index: 20;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.75rem;
-        opacity: 0;
-        transform: translateY(-6px) scale(0.98);
-        transform-origin: top center;
-      }
-      .nav-main.open {
-        display: flex;
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        transition: opacity 0.24s ease, transform 0.24s ease;
-      }
-      .nav-links {
-        width: 100%;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.55rem;
-      }
-      .nav-links a {
-        width: 100%;
-        padding: 0.25rem 0;
-      }
-      .lang-switcher {
-        margin-left: 0;
-        align-self: flex-start;
-      }
-      .hero h1 {
-        font-size: clamp(1.75rem, 4.8vw, 2.45rem);
-      }
-      section { padding: 2.4rem 0; }
-    }
-
-    @media (max-width: 700px) {
-      .wrap { width: 94vw; }
-      .grid.cols-3,
-      .grid.cols-2,
-      .hero-stats { grid-template-columns: 1fr; }
-      .hero p,
-      .section-head p {
-        font-size: 0.95rem;
-      }
-      .cta-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .cta-row .btn {
-        width: 100%;
-        text-align: center;
-      }
-      .section-head h2 { font-size: 1.35rem; }
-      .card h3 { font-size: 1rem; }
-      .badge { font-size: 0.77rem; }
-      .timeline {
-        padding-left: 0.8rem;
-        gap: 0.7rem;
-      }
-      .footer-note { font-size: 0.84rem; }
-      header { padding-bottom: 2.1rem; }
-    }
-
-    @media (max-width: 480px) {
-      nav { gap: 0.65rem; }
-      .brand { font-size: 1rem; }
-      .nav-links a { font-size: 0.92rem; }
-      .lang-btn {
-        font-size: 0.78rem;
-        padding: 0.3rem 0.52rem;
-      }
-      .hero h1 { line-height: 1.2; }
-      .card p, .card li { font-size: 0.92rem; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation: none !important;
-        transition: none !important;
-        scroll-behavior: auto !important;
-      }
-      .reveal {
-        opacity: 1 !important;
-        transform: none !important;
-      }
-    }
-  </style>
+  <title>STATIC — what a page can do</title>
+  <meta name="description" content="A GitHub Pages experiment probing the edges of what a static site can be: canvas fields, generative audio, scroll theater, keyboard as instrument.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <nav>
-        <div class="brand" data-i18n="nav.brand">PULSEPATCH</div>
-        <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-main" aria-label="Open menu" data-i18n-attr="aria-label:nav.openMenu">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span class="sr-only" data-i18n="nav.menu">Menu</span>
-        </button>
-        <div class="nav-main" id="nav-main">
-          <div class="nav-links">
-            <a href="#problem" data-i18n="nav.problem">Problem</a>
-            <a href="#solution" data-i18n="nav.solution">Solution</a>
-            <a href="#market" data-i18n="nav.market">Market</a>
-            <a href="#roadmap" data-i18n="nav.roadmap">Roadmap</a>
-            <a href="#invest" data-i18n="nav.investment">Investment</a>
-          </div>
-          <!--
-          <div class="lang-switcher" role="group" aria-label="Language" data-i18n-attr="aria-label:nav.language">
-            <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true">EN</button>
-            <button type="button" class="lang-btn" data-lang="zh-Hant" aria-pressed="false">繁中</button>
-            <button type="button" class="lang-btn" data-lang="hi" aria-pressed="false">हिन्दी</button>
-          </div>
-          -->
-        </div>
-      </nav>
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div id="hud" aria-live="polite"></div>
 
-      <div class="hero">
-        <div>
-          <h1 data-i18n="hero.title">Stick. Detect. Guide. Save.</h1>
-          <p data-i18n="hero.description">
-            PulsePatch is a stick-on emergency response patch designed to help bystanders act fast during sudden cardiac arrest by giving real-time CPR guidance and compression feedback.
-          </p>
-          <div class="cta-row">
-            <a class="btn primary" href="#invest" data-i18n="hero.ctaJoin">Join the Project</a>
-            <a class="btn secondary" href="./documents/PulsePatch_PRD_Professional.pdf" data-i18n="hero.ctaViewPrd">View Full PRD</a>
-          </div>
-        </div>
+  <div class="dock" role="toolbar" aria-label="Field controls">
+    <button type="button" class="dock-btn" id="arm-audio" aria-pressed="false">Sound off</button>
+    <button type="button" class="dock-btn" id="clear-field">Clear</button>
+    <button type="button" class="dock-btn" id="density-down" title="Fewer agents ([)">−</button>
+    <button type="button" class="dock-btn" id="density-up" title="More agents (])">+</button>
+  </div>
 
-        <div class="hero-card">
-          <h3 data-i18n="heroCard.title">Why this matters</h3>
-          <p data-i18n="heroCard.description">There is a critical gap between collapse and effective intervention. PulsePatch aims to reduce hesitation, improve CPR quality, and buy time until EMS or AED support arrives.</p>
-          <div class="hero-stats">
-            <div class="stat"><b data-i18n="stats.activationValue">&lt; 2 sec</b><small data-i18n="stats.activationLabel">Target activation time</small></div>
-            <div class="stat"><b data-i18n="stats.bpmValue">100-120 BPM</b><small data-i18n="stats.bpmLabel">Guided compression range</small></div>
-            <div class="stat"><b data-i18n="stats.detectionValue">&gt; 90%</b><small data-i18n="stats.detectionLabel">Compression detection target</small></div>
-            <div class="stat"><b data-i18n="stats.priceValue">$40-$120</b><small data-i18n="stats.priceLabel">Initial target unit price</small></div>
-          </div>
-        </div>
-      </div>
+  <header class="stage stage--hero" data-mode="orbit">
+    <p class="eyebrow">GitHub Pages · no backend · no frameworks</p>
+    <h1 class="brand">STATIC</h1>
+    <p class="lede">A page that refuses to sit still. Move. Click. Type. Scroll.</p>
+    <div class="cta-row">
+      <a class="btn btn--ghost" href="#limits">See the limits</a>
+      <a class="btn btn--ghost" href="#bridge">Jump to bridge</a>
     </div>
+    <p class="hint">Pointer stirs the field · clicks ring tones · keys leave residue · [ ] change density · M mutes</p>
   </header>
 
   <main>
-    <section id="problem" class="reveal">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 data-i18n="problem.title">The Problem</h2>
-          <p data-i18n="problem.subtitle">Survival outcomes in sudden cardiac arrest depend on immediate and correct bystander action, but panic and uncertainty often delay or reduce CPR quality.</p>
-        </div>
-        <div class="grid cols-3">
-          <article class="card"><h3 data-i18n="problem.cards.delayTitle">Delayed response</h3><p data-i18n="problem.cards.delayText">Many bystanders hesitate before taking action in high-stress emergencies.</p></article>
-          <article class="card"><h3 data-i18n="problem.cards.techniqueTitle">Technique errors</h3><p data-i18n="problem.cards.techniqueText">Common CPR mistakes include poor rhythm, inconsistent compressions, or no compressions.</p></article>
-          <article class="card"><h3 data-i18n="problem.cards.guidanceTitle">Guidance gap</h3><p data-i18n="problem.cards.guidanceText">AEDs are not always immediately available, and existing monitors do not actively coach intervention.</p></article>
-        </div>
-      </div>
+    <section class="stage" id="limits" data-mode="grid">
+      <h2>What this page is doing</h2>
+      <p class="lede">Everything below runs in your browser from static files. No server compute. No build step. Just HTML, CSS, and JS pushing APIs that GitHub Pages happily hosts.</p>
+      <ul class="limit-list">
+        <li><strong>Canvas 2D field</strong> — thousands of agents reacting to pointer velocity</li>
+        <li><strong>Web Audio</strong> — arm/disarm anytime; drone shifts with scroll and mode</li>
+        <li><strong>Scroll theater</strong> — each section rewires the field’s behavior</li>
+        <li><strong>Keyboard as instrument</strong> — letters spawn, decay, and color the mesh</li>
+        <li><strong>Pointer + touch</strong> — no drag-and-drop; works on phone and desktop</li>
+      </ul>
     </section>
 
-    <section id="solution" class="reveal">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 data-i18n="solution.title">The PulsePatch Solution</h2>
-          <p data-i18n="solution.subtitle">A zero-friction adhesive patch that transitions from detection to active CPR guidance in seconds.</p>
-        </div>
-        <div class="grid cols-2">
-          <article class="card">
-            <h3 data-i18n="solution.howTitle">How it works</h3>
-            <ul class="clean">
-              <li data-i18n="solution.howItems.i1">Stick patch on the chest and auto-activate.</li>
-              <li data-i18n="solution.howItems.i2">Capture ECG and motion signals (IMU-based detection).</li>
-              <li data-i18n="solution.howItems.i3">Trigger coaching mode when no response is detected.</li>
-              <li data-i18n="solution.howItems.i4">Guide compression pace and consistency with real-time feedback.</li>
-            </ul>
-          </article>
-          <article class="card">
-            <h3 data-i18n="solution.featuresTitle">Core feature set</h3>
-            <div>
-              <span class="badge" data-i18n="solution.badges.b1">Adhesive chest patch</span>
-              <span class="badge" data-i18n="solution.badges.b2">ECG + IMU sensing</span>
-              <span class="badge" data-i18n="solution.badges.b3">CPR BPM feedback</span>
-              <span class="badge" data-i18n="solution.badges.b4">Metronome + visual cues</span>
-              <span class="badge" data-i18n="solution.badges.b5">Two-minute reassessment cycle</span>
-              <span class="badge" data-i18n="solution.badges.b6">Future BLE + app integration</span>
-            </div>
-          </article>
-        </div>
-      </div>
+    <section class="stage" data-mode="storm">
+      <h2>Storm mode</h2>
+      <p class="lede">Scroll here and the field becomes chaotic. Click anywhere to drop a pressure pulse. Hold click for a longer burst.</p>
+      <p class="mono" id="storm-readout">particles: — · fps: — · mode: storm</p>
     </section>
 
-    <section id="market" class="reveal">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 data-i18n="market.title">Target Users and Go-To-Market</h2>
-          <p data-i18n="market.subtitle">PulsePatch focuses first on environments where emergency readiness matters and rapid response can save lives.</p>
-        </div>
-        <div class="grid cols-3">
-          <article class="card">
-            <h3 data-i18n="market.primaryTitle">Primary users</h3>
-            <ul class="clean">
-              <li data-i18n="market.primary.p1">Untrained bystanders</li>
-              <li data-i18n="market.primary.p2">Workplace safety personnel</li>
-              <li data-i18n="market.primary.p3">Gym staff and trainers</li>
-              <li data-i18n="market.primary.p4">School staff</li>
-            </ul>
-          </article>
-          <article class="card">
-            <h3 data-i18n="market.secondaryTitle">Secondary users</h3>
-            <ul class="clean">
-              <li data-i18n="market.secondary.s1">First responders</li>
-              <li data-i18n="market.secondary.s2">Ambulance crews (pre-AED stage)</li>
-              <li data-i18n="market.secondary.s3">Industrial safety teams</li>
-            </ul>
-          </article>
-          <article class="card">
-            <h3 data-i18n="market.businessTitle">Business model</h3>
-            <ul class="clean">
-              <li data-i18n="market.business.b1">Direct device sales</li>
-              <li data-i18n="market.business.b2">Bulk B2B sales (schools, gyms, factories)</li>
-              <li data-i18n="market.business.b3">Future subscription for data and app layer</li>
-            </ul>
-          </article>
-        </div>
-      </div>
+    <section class="stage" data-mode="type">
+      <h2>Type into the void</h2>
+      <p class="lede">Focus this page and type. Characters become short-lived glyphs in the field. Backspace erases the last trail. Escape clears the slate.</p>
+      <p class="typed-mirror" id="typed-mirror" aria-hidden="true"></p>
     </section>
 
-    <section id="roadmap" class="reveal">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 data-i18n="roadmap.title">Development Roadmap</h2>
-          <p data-i18n="roadmap.subtitle">Execution plan from prototype to regulatory pathway and pilot validation.</p>
-        </div>
-        <div class="card timeline">
-          <div class="phase"><b data-i18n="roadmap.phases.p1Title">Phase 1 (0-3 months)</b><br><small data-i18n="roadmap.phases.p1Text">IMU-based compression detection, metronome + LED feedback, basic patch form factor.</small></div>
-          <div class="phase"><b data-i18n="roadmap.phases.p2Title">Phase 2 (3-6 months)</b><br><small data-i18n="roadmap.phases.p2Text">ECG integration, state detection logic, improved UX and enclosure design.</small></div>
-          <div class="phase"><b data-i18n="roadmap.phases.p3Title">Phase 3 (6-12 months)</b><br><small data-i18n="roadmap.phases.p3Text">CPR mannequin testing, controlled user studies, iterative feedback optimization.</small></div>
-          <div class="phase"><b data-i18n="roadmap.phases.p4Title">Phase 4 (12+ months)</b><br><small data-i18n="roadmap.phases.p4Text">Clinical trials, FDA submission, certification workflow.</small></div>
-        </div>
-      </div>
+    <section class="stage" id="bridge" data-mode="bridge">
+      <h2>Bridge</h2>
+      <p class="lede">Nearby agents link into a living graph. Move the pointer through the mesh and watch edges bloom and die. Click to force a local cluster.</p>
+      <p class="mono" id="bridge-readout">links: —</p>
     </section>
 
-    <section id="invest" class="reveal">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 data-i18n="invest.title">Partnership and Investment Opportunity</h2>
-          <p data-i18n="invest.subtitle">We are looking for collaborators and early supporters to accelerate prototyping, testing, and regulatory preparation.</p>
-        </div>
-        <div class="grid cols-2">
-          <article class="card">
-            <h3 data-i18n="invest.supportTitle">Where support is needed now</h3>
-            <ul class="clean">
-              <li data-i18n="invest.support.s1">Prototype hardware and industrial design refinement</li>
-              <li data-i18n="invest.support.s2">Signal processing and feedback algorithm development</li>
-              <li data-i18n="invest.support.s3">User testing and pilot study setup</li>
-              <li data-i18n="invest.support.s4">Regulatory strategy and clinical validation planning</li>
-            </ul>
-          </article>
-          <article class="card">
-            <h3 data-i18n="invest.riskTitle">Current risk profile</h3>
-            <div class="risk">
-              <p data-i18n="invest.riskText">Technical noise and false positives/negatives, regulatory burden (likely Class II path), and high-stress UX clarity are key risks actively considered in the product plan.</p>
-            </div>
-            <p style="margin-top:0.8rem;"><a class="btn" style="background:var(--accent); color:#fff;" href="./documents/PulsePatch_PRD_Professional.pdf" data-i18n="invest.downloadPrd">Download PRD</a></p>
-          </article>
-        </div>
-      </div>
+    <section class="stage" data-mode="mirror">
+      <h2>Mirror</h2>
+      <p class="lede">Your cursor is drawn twice — once here, once flipped across the center axis. Move and both stir the field. Pulses echo. Sound (if armed) follows both sides.</p>
+    </section>
+
+    <section class="stage" data-mode="warp">
+      <h2>Warp</h2>
+      <p class="lede">The mesh folds toward the pointer. Hold still and watch orbits settle. Move fast and they shear.</p>
+    </section>
+
+    <section class="stage stage--end" data-mode="quiet">
+      <h2>Still a static site</h2>
+      <p class="lede">Hosted like any other GitHub Pages project. The weirdness is all client-side. Keep scrolling back up — the field never resets unless you clear it.</p>
+      <p class="credits">
+        <a href="https://ckyb63.github.io" target="_blank" rel="noopener">Max Chen</a>
+        ·
+        <a href="https://github.com/ckyb63" target="_blank" rel="noopener">github.com/ckyb63</a>
+      </p>
+      <p class="ai-note">Parts of this page were built with AI assistance.</p>
     </section>
   </main>
 
-  <footer class="footer-note">
-    <div class="wrap">
-      <span data-i18n="footer.note">PulsePatch is presented as a concept-stage emergency response aid and is not represented here as a diagnostic or defibrillation device.</span>
-    </div>
-  </footer>
-  <!-- <script src="i18n.js"></script> -->
-  <script>
-    (function () {
-      var toggle = document.getElementById('menu-toggle');
-      var navMain = document.getElementById('nav-main');
-      if (!toggle || !navMain) return;
-
-      function closeMenu() {
-        navMain.classList.remove('open');
-        toggle.classList.remove('active');
-        toggle.setAttribute('aria-expanded', 'false');
-      }
-
-      function openMenu() {
-        navMain.classList.add('open');
-        toggle.classList.add('active');
-        toggle.setAttribute('aria-expanded', 'true');
-      }
-
-      toggle.addEventListener('click', function () {
-        if (navMain.classList.contains('open')) {
-          closeMenu();
-        } else {
-          openMenu();
-        }
-      });
-
-      navMain.querySelectorAll('a').forEach(function (link) {
-        link.addEventListener('click', function () {
-          if (window.innerWidth <= 900) closeMenu();
-        });
-      });
-
-      document.addEventListener('click', function (event) {
-        if (window.innerWidth > 900) return;
-        var inMenu = navMain.contains(event.target);
-        var inToggle = toggle.contains(event.target);
-        if (!inMenu && !inToggle) closeMenu();
-      });
-
-      window.addEventListener('resize', function () {
-        if (window.innerWidth > 900) closeMenu();
-      });
-    })();
-  </script>
-  <script>
-    (function () {
-      var revealEls = document.querySelectorAll('.reveal');
-      if (!revealEls.length) return;
-
-      if (!('IntersectionObserver' in window)) {
-        revealEls.forEach(function (el) { el.classList.add('in-view'); });
-        return;
-      }
-
-      var observer = new IntersectionObserver(function (entries, obs) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            obs.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-      revealEls.forEach(function (el) {
-        observer.observe(el);
-      });
-    })();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

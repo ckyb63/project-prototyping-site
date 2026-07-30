@@ -1,0 +1,20 @@
+[
+  {
+    "id": "seed-static",
+    "code": "B-01",
+    "title": "STATIC",
+    "status": "shipped",
+    "blurb": "Canvas field, scroll theater, Web Audio — the first bay experiment. Now living in its own repo.",
+    "href": "https://ckyb63.github.io/totally-static/",
+    "tags": ["canvas", "audio", "experiment"]
+  },
+  {
+    "id": "open-02",
+    "code": "B-02",
+    "title": "Awaiting payload",
+    "status": "queued",
+    "blurb": "Mentally reserved for the next half-baked idea that needs a public URL.",
+    "href": null,
+    "tags": ["queued"]
+  }
+]

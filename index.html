@@ -3,88 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STATIC — what a page can do</title>
-  <meta name="description" content="A GitHub Pages experiment probing the edges of what a static site can be: canvas fields, generative audio, scroll theater, keyboard as instrument.">
+  <title>BAY — project staging</title>
+  <meta name="description" content="A staging ground for prototypes, experiments, and unfinished work. Projects land here before they ship elsewhere.">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <canvas id="field" aria-hidden="true"></canvas>
-  <div id="hud" aria-live="polite"></div>
+  <canvas id="bay-bg" aria-hidden="true"></canvas>
 
-  <div class="dock" role="toolbar" aria-label="Field controls">
-    <button type="button" class="dock-btn" id="arm-audio" aria-pressed="false">Sound off</button>
-    <button type="button" class="dock-btn" id="clear-field">Clear</button>
-    <button type="button" class="dock-btn" id="density-down" title="Fewer agents ([)">−</button>
-    <button type="button" class="dock-btn" id="density-up" title="More agents (])">+</button>
-  </div>
-
-  <header class="stage stage--hero" data-mode="orbit">
-    <p class="eyebrow">GitHub Pages · no backend · no frameworks</p>
-    <h1 class="brand">STATIC</h1>
-    <p class="lede">A page that refuses to sit still. Move. Click. Type. Scroll.</p>
-    <div class="cta-row">
-      <a class="btn btn--ghost" href="#limits">See the limits</a>
-      <a class="btn btn--ghost" href="#bridge">Jump to bridge</a>
-    </div>
-    <p class="hint">Pointer stirs the field · clicks ring tones · keys leave residue · [ ] change density · M mutes</p>
+  <header class="topbar">
+    <a class="mark" href="#top">BAY</a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="#berths">Berths</a>
+      <a href="#how">How it works</a>
+      <a href="https://ckyb63.github.io" target="_blank" rel="noopener">Personal Site</a>
+    </nav>
   </header>
 
-  <main>
-    <section class="stage" id="limits" data-mode="grid">
-      <h2>What this page is doing</h2>
-      <p class="lede">Everything below runs in your browser from static files. No server compute. No build step. Just HTML, CSS, and JS pushing APIs that GitHub Pages happily hosts.</p>
-      <ul class="limit-list">
-        <li><strong>Canvas 2D field</strong> — thousands of agents reacting to pointer velocity</li>
-        <li><strong>Web Audio</strong> — arm/disarm anytime; drone shifts with scroll and mode</li>
-        <li><strong>Scroll theater</strong> — each section rewires the field’s behavior</li>
-        <li><strong>Keyboard as instrument</strong> — letters spawn, decay, and color the mesh</li>
-        <li><strong>Pointer + touch</strong> — no drag-and-drop; works on phone and desktop</li>
-      </ul>
-    </section>
-
-    <section class="stage" data-mode="storm">
-      <h2>Storm mode</h2>
-      <p class="lede">Scroll here and the field becomes chaotic. Click anywhere to drop a pressure pulse. Hold click for a longer burst.</p>
-      <p class="mono" id="storm-readout">particles: — · fps: — · mode: storm</p>
-    </section>
-
-    <section class="stage" data-mode="type">
-      <h2>Type into the void</h2>
-      <p class="lede">Focus this page and type. Characters become short-lived glyphs in the field. Backspace erases the last trail. Escape clears the slate.</p>
-      <p class="typed-mirror" id="typed-mirror" aria-hidden="true"></p>
-    </section>
-
-    <section class="stage" id="bridge" data-mode="bridge">
-      <h2>Bridge</h2>
-      <p class="lede">Nearby agents link into a living graph. Move the pointer through the mesh and watch edges bloom and die. Click to force a local cluster.</p>
-      <p class="mono" id="bridge-readout">links: —</p>
-    </section>
-
-    <section class="stage" data-mode="mirror">
-      <h2>Mirror</h2>
-      <p class="lede">Your cursor is drawn twice — once here, once flipped across the center axis. Move and both stir the field. Pulses echo. Sound (if armed) follows both sides.</p>
-    </section>
-
-    <section class="stage" data-mode="warp">
-      <h2>Warp</h2>
-      <p class="lede">The mesh folds toward the pointer. Hold still and watch orbits settle. Move fast and they shear.</p>
-    </section>
-
-    <section class="stage stage--end" data-mode="quiet">
-      <h2>Still a static site</h2>
-      <p class="lede">Hosted like any other GitHub Pages project. The weirdness is all client-side. Keep scrolling back up — the field never resets unless you clear it.</p>
-      <p class="credits">
-        <a href="https://ckyb63.github.io" target="_blank" rel="noopener">Max Chen</a>
-        ·
-        <a href="https://github.com/ckyb63" target="_blank" rel="noopener">github.com/ckyb63</a>
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow">Staging ground · GitHub Pages</p>
+      <h1>Projects land here<br>before they leave.</h1>
+      <p class="lede">
+        BAY is a hangar for prototypes — unfinished, experimental, or mid-flight.
+        Drop a build in a berth. When it’s ready, it ships to its own home.
       </p>
-      <p class="ai-note">Parts of this page were built with AI assistance.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#berths">Open berths</a>
+        <button type="button" class="btn btn--ghost" id="ping-bay">Ping the floor</button>
+      </div>
+      <dl class="hero-meta">
+        <div><dt>Status</dt><dd id="bay-status">cold start</dd></div>
+        <div><dt>Berths</dt><dd id="berth-count">—</dd></div>
+        <div><dt>Clock</dt><dd id="bay-clock">--:--:--</dd></div>
+      </dl>
+    </section>
+
+    <section class="berths" id="berths" aria-label="Project berths">
+      <div class="section-head">
+        <h2>Berths</h2>
+        <p>Arrow keys or swipe to move between pads. Click a live berth to open it.</p>
+      </div>
+      <div class="rail-wrap">
+        <button type="button" class="rail-nav" id="rail-prev" aria-label="Previous berth">‹</button>
+        <div class="rail" id="rail" tabindex="0"></div>
+        <button type="button" class="rail-nav" id="rail-next" aria-label="Next berth">›</button>
+      </div>
+      <p class="rail-hint" id="rail-hint" aria-live="polite"></p>
+    </section>
+
+    <section class="sandbox" id="sandbox">
+      <div class="section-head">
+        <h2>Floor sandbox</h2>
+        <p>A throwaway pad to prove the bay is alive. Click to drop signal beacons.</p>
+      </div>
+      <canvas id="sandbox-canvas" width="800" height="360" aria-label="Interactive bay floor sandbox"></canvas>
+      <p class="sandbox-readout" id="sandbox-readout">beacons: 0 · click the floor</p>
     </section>
   </main>
+
+  <footer class="footer">
+    <p>
+      <a href="https://ckyb63.github.io" target="_blank" rel="noopener">Max Chen</a>
+      · project staging
+    </p>
+    <p class="ai-note">Parts of this page were built with AI assistance.</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>

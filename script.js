@@ -1,188 +1,17 @@
 (function () {
   "use strict";
 
-  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var bg = document.getElementById("bay-bg");
-  var rail = document.getElementById("rail");
-  var railHint = document.getElementById("rail-hint");
-  var berthCount = document.getElementById("berth-count");
-  var bayStatus = document.getElementById("bay-status");
-  var bayClock = document.getElementById("bay-clock");
-  var pingBtn = document.getElementById("ping-bay");
-  var sandbox = document.getElementById("sandbox-canvas");
-  var sandboxReadout = document.getElementById("sandbox-readout");
+  var list = document.getElementById("projects");
+  var tally = document.getElementById("tally");
 
-  var projects = [];
-  var activeIndex = 0;
-  var beacons = [];
-  var pingUntil = 0;
-  var pointer = { x: 0, y: 0 };
+  var STATUS_LABELS = {
+    hot: "In progress",
+    queued: "Up next",
+    shipped: "Shipped",
+    empty: "Open",
+  };
 
-  /* ── Background schematic ── */
-  function initBackground() {
-    if (!bg || reduced) return;
-    var ctx = bg.getContext("2d");
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var W = 0;
-    var H = 0;
-    var t = 0;
-
-    function resize() {
-      W = window.innerWidth;
-      H = window.innerHeight;
-      bg.width = Math.floor(W * dpr);
-      bg.height = Math.floor(H * dpr);
-      bg.style.width = W + "px";
-      bg.style.height = H + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-
-    function draw(now) {
-      t = now * 0.001;
-      ctx.clearRect(0, 0, W, H);
-
-      ctx.strokeStyle = "rgba(20,32,43,0.06)";
-      ctx.lineWidth = 1;
-      var step = 48;
-      var ox = (pointer.x * 0.02) % step;
-      var oy = (pointer.y * 0.02) % step;
-      for (var x = -step + ox; x < W + step; x += step) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, H);
-        ctx.stroke();
-      }
-      for (var y = -step + oy; y < H + step; y += step) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(W, y);
-        ctx.stroke();
-      }
-
-      /* bay lanes */
-      ctx.strokeStyle = "rgba(31,167,160,0.12)";
-      ctx.lineWidth = 2;
-      for (var i = 0; i < 4; i++) {
-        var ly = H * 0.25 + i * H * 0.16;
-        ctx.beginPath();
-        ctx.moveTo(0, ly + Math.sin(t + i) * 4);
-        ctx.lineTo(W, ly + Math.sin(t + i + 1) * 4);
-        ctx.stroke();
-      }
-
-      /* radar sweep from bottom-right */
-      var cx = W * 0.88;
-      var cy = H * 0.82;
-      var ang = t * 0.7;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.arc(cx, cy, Math.min(W, H) * 0.35, ang, ang + 0.45);
-      ctx.closePath();
-      ctx.fillStyle = "rgba(196,92,38,0.05)";
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(196,92,38,0.55)";
-      ctx.fill();
-
-      if (now < pingUntil) {
-        var age = 1 - (pingUntil - now) / 1200;
-        ctx.beginPath();
-        ctx.arc(cx, cy, 20 + age * 180, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(31,167,160," + (0.45 * (1 - age)) + ")";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-
-      requestAnimationFrame(draw);
-    }
-
-    resize();
-    window.addEventListener("resize", resize);
-    window.addEventListener(
-      "pointermove",
-      function (e) {
-        pointer.x = e.clientX;
-        pointer.y = e.clientY;
-      },
-      { passive: true }
-    );
-    requestAnimationFrame(draw);
-  }
-
-  /* ── Clock / status ── */
-  function tickClock() {
-    if (!bayClock) return;
-    var d = new Date();
-    bayClock.textContent = d.toTimeString().slice(0, 8);
-  }
-
-  /* ── Berths from projects.json ── */
-  function statusLabel(s) {
-    return s || "empty";
-  }
-
-  function renderBerths() {
-    if (!rail) return;
-    rail.innerHTML = "";
-
-    projects.forEach(function (p, index) {
-      var el = document.createElement(p.href ? "a" : "article");
-      el.className = "berth";
-      el.dataset.index = String(index);
-      if (p.href) {
-        el.href = p.href;
-        if (/^https?:/i.test(p.href)) {
-          el.target = "_blank";
-          el.rel = "noopener";
-        }
-      }
-
-      var tags = (p.tags || [])
-        .map(function (t) {
-          return "<span>" + escapeHtml(t) + "</span>";
-        })
-        .join("");
-
-      var cta =
-        p.status === "shipped" && p.href
-          ? "Open shipped build →"
-          : p.href
-            ? "Enter berth →"
-            : "Pad vacant";
-
-      el.innerHTML =
-        '<div class="berth-top">' +
-        '<span class="berth-code">' +
-        escapeHtml(p.code || "B-??") +
-        "</span>" +
-        '<span class="berth-status" data-status="' +
-        escapeHtml(statusLabel(p.status)) +
-        '">' +
-        escapeHtml(statusLabel(p.status)) +
-        "</span>" +
-        "</div>" +
-        "<h3>" +
-        escapeHtml(p.title || "Untitled") +
-        "</h3>" +
-        "<p>" +
-        escapeHtml(p.blurb || "") +
-        "</p>" +
-        '<div class="berth-tags">' +
-        tags +
-        "</div>" +
-        '<div class="berth-cta">' +
-        cta +
-        "</div>";
-
-      rail.appendChild(el);
-    });
-
-    if (berthCount) berthCount.textContent = String(projects.length);
-    updateActiveBerth(0);
-    updateBayStatus();
-  }
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   function escapeHtml(str) {
     return String(str)
@@ -192,215 +21,283 @@
       .replace(/"/g, "&quot;");
   }
 
-  function updateBayStatus() {
-    if (!bayStatus) return;
-    var hot = projects.some(function (p) {
-      return p.status === "hot";
-    });
-    var queued = projects.some(function (p) {
-      return p.status === "queued";
-    });
-    bayStatus.textContent = hot ? "hot" : queued ? "queued work" : "standing by";
+  /* Deterministic random so the art looks the same on every load */
+  function seeded(seed) {
+    return function () {
+      seed |= 0;
+      seed = (seed + 0x6d2b79f5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
   }
 
-  function updateActiveBerth(index) {
-    var cards = rail ? rail.querySelectorAll(".berth") : [];
-    if (!cards.length) return;
-    activeIndex = ((index % cards.length) + cards.length) % cards.length;
-    cards.forEach(function (card, i) {
-      card.classList.toggle("is-active", i === activeIndex);
-    });
-    var p = projects[activeIndex];
-    if (railHint && p) {
-      railHint.textContent =
-        p.code + " · " + p.title + " · " + statusLabel(p.status) + " · " + (activeIndex + 1) + "/" + projects.length;
-    }
+  function r1(n) {
+    return Math.round(n * 10) / 10;
   }
 
-  function scrollToBerth(index) {
-    var cards = rail ? rail.querySelectorAll(".berth") : [];
-    if (!cards.length) return;
-    updateActiveBerth(index);
-    cards[activeIndex].scrollIntoView({ behavior: reduced ? "auto" : "smooth", inline: "center", block: "nearest" });
-  }
+  /* ── Project art (200×200 inline SVG) ── */
 
-  function loadProjects() {
-    return fetch("projects.json", { cache: "no-store" })
-      .then(function (res) {
-        if (!res.ok) throw new Error("missing projects.json");
-        return res.json();
-      })
-      .catch(function () {
-        return [
-          {
-            id: "fallback",
-            code: "B-00",
-            title: "Offline berth",
-            status: "empty",
-            blurb: "Could not load projects.json. Serve this folder over HTTP to populate berths.",
-            href: null,
-            tags: ["local"],
-          },
-        ];
-      })
-      .then(function (data) {
-        projects = Array.isArray(data) ? data : [];
-        renderBerths();
-      });
-  }
+  /* A wireframe mesh on a table, with the camera's orbit around it */
+  function scanArt() {
+    var out = '<ellipse class="art-faint" cx="100" cy="142" rx="74" ry="18" stroke-dasharray="3 4"/>';
+    var R = 50;
+    var squash = 0.28;
 
-  /* ── Sandbox floor ── */
-  function initSandbox() {
-    if (!sandbox) return;
-    var ctx = sandbox.getContext("2d");
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-    function size() {
-      var cssW = sandbox.clientWidth || 800;
-      var cssH = Math.max(220, Math.round(cssW * 0.42));
-      sandbox.width = Math.floor(cssW * dpr);
-      sandbox.height = Math.floor(cssH * dpr);
-      sandbox.style.height = cssH + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      return { w: cssW, h: cssH };
+    function point(phi, th) {
+      var r = R * Math.cos(phi);
+      return r1(100 + r * Math.cos(th)) + " " + r1(138 - R * Math.sin(phi) + r * squash * Math.sin(th));
     }
 
-    function draw() {
-      var dim = size();
-      var w = dim.w;
-      var h = dim.h;
-      ctx.clearRect(0, 0, w, h);
-
-      ctx.fillStyle = "rgba(20,32,43,0.03)";
-      ctx.fillRect(0, 0, w, h);
-
-      ctx.strokeStyle = "rgba(20,32,43,0.08)";
-      for (var x = 0; x < w; x += 32) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, h);
-        ctx.stroke();
+    /* Draws a curve, solid where it faces the viewer and faint behind */
+    function curve(fn, steps) {
+      var front = "";
+      var back = "";
+      for (var i = 0; i < steps; i++) {
+        var a = fn(i / steps);
+        var b = fn((i + 1) / steps);
+        var seg = "M" + point(a[0], a[1]) + "L" + point(b[0], b[1]);
+        if (Math.sin((a[1] + b[1]) / 2) >= 0) front += seg;
+        else back += seg;
       }
-      for (var y = 0; y < h; y += 32) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(w, y);
-        ctx.stroke();
-      }
+      return (
+        '<path class="art-faint" d="' + back + '" stroke-width="1"/>' +
+        '<path class="art-stroke" d="' + front + '" stroke-width="1.3" stroke-linecap="round"/>'
+      );
+    }
 
-      /* center pad */
-      ctx.strokeStyle = "rgba(31,167,160,0.45)";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(w * 0.18, h * 0.22, w * 0.64, h * 0.56);
-      ctx.setLineDash([6, 8]);
-      ctx.strokeStyle = "rgba(196,92,38,0.35)";
-      ctx.strokeRect(w * 0.28, h * 0.34, w * 0.44, h * 0.32);
-      ctx.setLineDash([]);
+    for (var k = 0; k < 5; k++) {
+      var phi = (k / 5) * (Math.PI / 2);
+      out += curve(function (t) { return [phi, t * Math.PI * 2]; }, 36);
+    }
+    for (var m = 0; m < 10; m++) {
+      var th = (m / 10) * Math.PI * 2 + 0.2;
+      out += curve(function (t) { return [t * (Math.PI / 2), th]; }, 10);
+    }
+    out +=
+      '<ellipse class="art-accent-stroke" cx="100" cy="112" rx="86" ry="30" stroke-width="1.5" stroke-dasharray="2 5"/>' +
+      '<path class="art-accent-stroke" d="M36 125 L84 102 M36 131 L86 150" stroke-width="1" opacity="0.6"/>' +
+      '<rect class="art-accent" x="18" y="122" width="18" height="12" rx="2" transform="rotate(-12 27 128)"/>';
+    return out;
+  }
 
-      var now = performance.now();
-      for (var i = beacons.length - 1; i >= 0; i--) {
-        var b = beacons[i];
-        var age = (now - b.t) / 1000;
-        if (age > 4) {
-          beacons.splice(i, 1);
-          continue;
+  /* A resistor with its bands read and a detection box around it */
+  function resistorArt() {
+    var bands = [
+      [68, "#7a4a21"],
+      [84, "#1b1b1b"],
+      [100, "#c92a2a"],
+      [126, "#c9a227"],
+    ];
+    var out =
+      '<line class="art-stroke" x1="14" y1="100" x2="186" y2="100" stroke-width="3" stroke-linecap="round"/>' +
+      '<rect x="52" y="80" width="96" height="40" rx="18" fill="#e3c99a"/>';
+    bands.forEach(function (b) {
+      out += '<rect x="' + b[0] + '" y="80.5" width="7" height="39" fill="' + b[1] + '"/>';
+    });
+    out +=
+      '<rect class="art-accent-stroke" x="42" y="66" width="116" height="68" rx="4" stroke-width="2"/>' +
+      '<rect class="art-accent" x="42" y="45" width="62" height="18" rx="3"/>' +
+      '<text class="art-label" x="50" y="58">1.0 kΩ</text>' +
+      '<text class="art-caption" x="42" y="154">brn blk red gld</text>';
+    return out;
+  }
+
+  /* An audio waveform, partly downloaded */
+  function downloadArt() {
+    var rand = seeded(7);
+    var out = "";
+    var x0 = 34;
+    var width = 132;
+    var done = 0.64;
+    for (var x = x0; x <= x0 + width; x += 6) {
+      var env = Math.sin(((x - x0) / width) * Math.PI);
+      var h = 6 + (0.35 + rand() * 0.65) * 50 * env;
+      var cls = x < x0 + width * done ? "art-accent-stroke" : "art-stroke";
+      out +=
+        '<line class="' + cls + '" x1="' + x + '" y1="' + r1(84 - h / 2) + '" x2="' + x + '" y2="' + r1(84 + h / 2) +
+        '" stroke-width="3.2" stroke-linecap="round"' + (cls === "art-stroke" ? ' opacity="0.3"' : "") + "/>";
+    }
+    out +=
+      '<rect class="art-track" x="' + x0 + '" y="132" width="' + width + '" height="6" rx="3"/>' +
+      '<rect class="art-accent" x="' + x0 + '" y="132" width="' + r1(width * done) + '" height="6" rx="3"/>' +
+      '<text class="art-caption" x="' + x0 + '" y="158">m4a · 64%</text>' +
+      '<text class="art-caption" x="' + (x0 + width) + '" y="158" text-anchor="end">3.1 MB</text>';
+    return out;
+  }
+
+  /* A field of static */
+  function noiseArt() {
+    var rand = seeded(42);
+    var out = "";
+    var cell = 16;
+    var gap = 3;
+    var start = (200 - (9 * cell + 8 * gap)) / 2;
+    for (var row = 0; row < 9; row++) {
+      for (var col = 0; col < 9; col++) {
+        var v = rand();
+        var x = start + col * (cell + gap);
+        var y = start + row * (cell + gap);
+        if (v < 0.03) {
+          out += '<rect class="art-accent" x="' + x + '" y="' + y + '" width="' + cell + '" height="' + cell + '" rx="2"/>';
+        } else if (v > 0.2) {
+          out +=
+            '<rect class="art-ink" x="' + x + '" y="' + y + '" width="' + cell + '" height="' + cell +
+            '" rx="2" opacity="' + r1(Math.pow(v, 2.2) * 0.9) + '"/>';
         }
-        var a = 1 - age / 4;
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, 4 + age * 28, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(31,167,160," + a * 0.7 + ")";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, 3, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(196,92,38," + a + ")";
-        ctx.fill();
       }
-
-      if (sandboxReadout) {
-        sandboxReadout.textContent = "beacons: " + beacons.length + " · click the floor";
-      }
-      requestAnimationFrame(draw);
     }
-
-    sandbox.addEventListener("pointerdown", function (e) {
-      var rect = sandbox.getBoundingClientRect();
-      var x = ((e.clientX - rect.left) / rect.width) * (sandbox.clientWidth || rect.width);
-      var y = ((e.clientY - rect.top) / rect.height) * (parseFloat(sandbox.style.height) || rect.height);
-      beacons.push({ x: x, y: y, t: performance.now() });
-      if (beacons.length > 24) beacons.shift();
-    });
-
-    window.addEventListener("resize", function () {
-      size();
-    });
-
-    requestAnimationFrame(draw);
+    return out;
   }
 
-  /* ── Events ── */
-  document.getElementById("rail-prev") &&
-    document.getElementById("rail-prev").addEventListener("click", function () {
-      scrollToBerth(activeIndex - 1);
-    });
-
-  document.getElementById("rail-next") &&
-    document.getElementById("rail-next").addEventListener("click", function () {
-      scrollToBerth(activeIndex + 1);
-    });
-
-  if (rail) {
-    rail.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowRight") {
-        e.preventDefault();
-        scrollToBerth(activeIndex + 1);
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        scrollToBerth(activeIndex - 1);
-      }
-    });
-
-    rail.addEventListener(
-      "scroll",
-      function () {
-        var cards = rail.querySelectorAll(".berth");
-        if (!cards.length) return;
-        var mid = rail.scrollLeft + rail.clientWidth / 2;
-        var best = 0;
-        var bestDist = Infinity;
-        cards.forEach(function (card, i) {
-          var c = card.offsetLeft + card.offsetWidth / 2;
-          var d = Math.abs(c - mid);
-          if (d < bestDist) {
-            bestDist = d;
-            best = i;
-          }
-        });
-        updateActiveBerth(best);
-      },
-      { passive: true }
+  /* A camera crosshair over colored shapes, with the named reading below */
+  function swatchArt() {
+    return (
+      '<circle cx="70" cy="76" r="34" fill="#e9c46a"/>' +
+      '<circle cx="128" cy="88" r="40" fill="#2a9d8f"/>' +
+      '<circle cx="90" cy="122" r="24" fill="#e76f51"/>' +
+      '<circle cx="128" cy="88" r="13" fill="none" stroke="#fff" stroke-width="2.5"/>' +
+      '<path d="M128 69v10M128 97v10M109 88h10M137 88h10" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>' +
+      '<circle cx="64" cy="70" r="5" fill="#fff" stroke="#15171a" stroke-width="1.5"/>' +
+      '<rect class="art-panel" x="30" y="150" width="140" height="30" rx="6"/>' +
+      '<rect x="38" y="157" width="16" height="16" rx="3" fill="#2a9d8f"/>' +
+      '<text class="art-name" x="62" y="170">Teal</text>' +
+      '<text class="art-caption" x="162" y="169" text-anchor="end">#2A9D8F</text>'
     );
   }
 
-  window.addEventListener("keydown", function (e) {
-    if (e.target.closest("input, textarea, button, a")) return;
-    if (e.key === "ArrowRight") scrollToBerth(activeIndex + 1);
-    if (e.key === "ArrowLeft") scrollToBerth(activeIndex - 1);
-  });
-
-  if (pingBtn) {
-    pingBtn.addEventListener("click", function () {
-      pingUntil = performance.now() + 1200;
-      if (bayStatus) {
-        bayStatus.textContent = "ping";
-        window.setTimeout(updateBayStatus, 1300);
-      }
-    });
+  /* An old phone on its side, showing dashboard tiles */
+  function dashArt() {
+    return (
+      '<rect class="art-stroke" x="14" y="46" width="172" height="108" rx="16" stroke-width="2.5"/>' +
+      '<circle class="art-ink" cx="176" cy="100" r="2.2"/>' +
+      '<rect class="art-panel" x="28" y="58" width="80" height="84" rx="6"/>' +
+      '<text class="art-clock" x="68" y="102" text-anchor="middle">07:42</text>' +
+      '<text class="art-caption" x="68" y="120" text-anchor="middle">Sun · 25 Oct</text>' +
+      '<rect class="art-panel" x="114" y="58" width="54" height="40" rx="6"/>' +
+      '<circle class="art-accent" cx="127" cy="78" r="5.5"/>' +
+      '<path class="art-accent-stroke" d="M127 68v-2M127 88v2M117 78h-2M137 78h2" stroke-width="1.5" stroke-linecap="round"/>' +
+      '<text class="art-name" x="163" y="83" text-anchor="end">18°</text>' +
+      '<rect class="art-panel" x="114" y="102" width="54" height="40" rx="6"/>' +
+      '<text class="art-caption" x="121" y="118">timer</text>' +
+      '<rect class="art-track" x="121" y="126" width="40" height="5" rx="2.5"/>' +
+      '<rect class="art-accent" x="121" y="126" width="26" height="5" rx="2.5"/>'
+    );
   }
 
-  initBackground();
-  initSandbox();
-  tickClock();
-  window.setInterval(tickClock, 1000);
-  loadProjects();
+  function fallbackArt() {
+    return (
+      '<circle class="art-faint" cx="100" cy="100" r="44" stroke-width="1.5"/>' +
+      '<path class="art-faint" d="M100 40v120M40 100h120" stroke-width="1.5"/>' +
+      '<circle class="art-accent" cx="100" cy="100" r="5"/>'
+    );
+  }
+
+  var ART = {
+    scan: scanArt,
+    resistor: resistorArt,
+    download: downloadArt,
+    noise: noiseArt,
+    swatch: swatchArt,
+    dash: dashArt,
+  };
+
+  function artSvg(name) {
+    var draw = ART[name] || fallbackArt;
+    return '<svg viewBox="0 0 200 200" role="presentation" focusable="false">' + draw() + "</svg>";
+  }
+
+  /* ── Rendering ── */
+
+  function formatUpdated(value) {
+    var m = /^(\d{4})-(\d{2})/.exec(value || "");
+    if (!m) return "";
+    return "Updated " + MONTHS[parseInt(m[2], 10) - 1] + " " + m[1];
+  }
+
+  function isSlot(p) {
+    return !p.href && (p.status === "queued" || p.status === "empty" || !p.status);
+  }
+
+  function renderProject(p, number) {
+    var status = STATUS_LABELS[p.status] ? p.status : "empty";
+    var slot = isSlot(p);
+    var li = document.createElement("li");
+    li.className = "project" + (slot ? " project--slot" : "");
+
+    var meta = "";
+    if (!slot) meta += "<span>" + (number < 10 ? "0" : "") + number + "</span>";
+    meta += '<span class="status" data-status="' + status + '">' + STATUS_LABELS[status] + "</span>";
+    var updated = formatUpdated(p.updated);
+    if (updated) meta += "<span>" + updated + "</span>";
+
+    var tags = (p.tags || [])
+      .map(function (t) {
+        return "<li>" + escapeHtml(t) + "</li>";
+      })
+      .join("");
+
+    var action = "";
+    if (p.href) {
+      var external = /^https?:/i.test(p.href);
+      action =
+        '<a href="' + escapeHtml(p.href) + '"' + (external ? ' target="_blank" rel="noopener"' : "") + ">" +
+        (status === "shipped" ? "Open it" : "Open the build") + (external ? " ↗" : " →") + "</a>";
+    } else if (!slot) {
+      action = '<span class="project-private">Private while in progress</span>';
+    }
+
+    li.innerHTML =
+      (slot ? "" : '<div class="project-art" aria-hidden="true">' + artSvg(p.art) + "</div>") +
+      '<div class="project-body">' +
+      '<div class="project-meta">' + meta + "</div>" +
+      '<h2 class="project-title">' + escapeHtml(p.title || "Untitled") + "</h2>" +
+      '<p class="project-blurb">' + escapeHtml(p.blurb || "") + "</p>" +
+      (tags && !slot ? '<ul class="project-tags">' + tags + "</ul>" : "") +
+      (action ? '<div class="project-action">' + action + "</div>" : "") +
+      "</div>";
+    return li;
+  }
+
+  function renderTally(projects) {
+    if (!tally) return;
+    var counts = {};
+    projects.forEach(function (p) {
+      var s = STATUS_LABELS[p.status] ? p.status : "empty";
+      counts[s] = (counts[s] || 0) + 1;
+    });
+    var parts = [];
+    if (counts.hot) parts.push(counts.hot + " in progress");
+    if (counts.shipped) parts.push(counts.shipped + " shipped");
+    if (counts.queued) parts.push(counts.queued + " up next");
+    tally.textContent = parts.join(" · ");
+  }
+
+  function render(projects) {
+    list.innerHTML = "";
+    var number = 0;
+    projects.forEach(function (p) {
+      if (!isSlot(p)) number++;
+      list.appendChild(renderProject(p, number));
+    });
+    renderTally(projects);
+  }
+
+  function showLoadError() {
+    list.innerHTML =
+      '<li class="load-error">Couldn’t load <code>projects.json</code>. ' +
+      "Serve this folder over HTTP (see the README) to see the projects.</li>";
+  }
+
+  if (!list) return;
+
+  fetch("projects.json", { cache: "no-store" })
+    .then(function (res) {
+      if (!res.ok) throw new Error("missing projects.json");
+      return res.json();
+    })
+    .then(function (data) {
+      render(Array.isArray(data) ? data : []);
+    })
+    .catch(showLoadError);
 })();

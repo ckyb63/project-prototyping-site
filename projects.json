@@ -1,16 +1,66 @@
 [
   {
-    "id": "seed-static",
-    "code": "B-01",
-    "title": "STATIC",
-    "status": "shipped",
-    "blurb": "Canvas field, scroll theater, Web Audio — the first bay experiment. Now living in its own repo.",
-    "href": "https://ckyb63.github.io/totally-static/",
-    "tags": ["canvas", "audio", "experiment"]
+    "id": "phonedash",
+    "title": "PhoneDash",
+    "status": "hot",
+    "updated": "2026-10",
+    "blurb": "Turns an old Android phone into a bedside or desk display: swipeable screens of tiles for weather, timers, media controls and device stats, with scheduled dimming. No accounts or tracking.",
+    "href": null,
+    "tags": ["android", "kotlin", "jetpack-compose", "widgets"],
+    "art": "dash"
   },
   {
-    "id": "open-02",
-    "code": "B-02",
+    "id": "astrascan",
+    "title": "AstraScan",
+    "status": "hot",
+    "updated": "2026-10",
+    "blurb": "Walk an Orbbec Astra Pro around an object or a room and get a colored 3D mesh out. Live tracking, loop closure, a background build queue, and STL/OBJ/GLB export for printing.",
+    "href": null,
+    "tags": ["3d-scanning", "open3d", "rgb-d", "windows"],
+    "art": "scan"
+  },
+  {
+    "id": "huehuhwhat",
+    "title": "HueHuhWhat",
+    "status": "hot",
+    "updated": "2026-10",
+    "blurb": "Android app that helps color-blind people name colors: point the camera, read the color in large text or hear it spoken. Pin extra points, freeze a frame; everything runs on-device.",
+    "href": null,
+    "tags": ["android", "kotlin", "camerax", "accessibility"],
+    "art": "swatch"
+  },
+  {
+    "id": "resistor",
+    "title": "ResistOR",
+    "status": "hot",
+    "updated": "2026-10",
+    "blurb": "Reads resistor values from their color bands, in a photo or a live camera feed. Finds every resistor in view, even on a breadboard, and locks a reading once frames agree.",
+    "href": null,
+    "tags": ["computer-vision", "pyside6", "opencv"],
+    "art": "resistor"
+  },
+  {
+    "id": "ydl",
+    "title": "YDL",
+    "status": "hot",
+    "updated": "2026-10",
+    "blurb": "Desktop front end for yt-dlp: paste a link, preview it, and save it as MP4 or as M4A/MP3/Opus/WAV audio. Has a queue, history, playlists, and a smaller Lite build.",
+    "href": null,
+    "tags": ["pyside6", "yt-dlp", "desktop"],
+    "art": "download"
+  },
+  {
+    "id": "seed-static",
+    "title": "STATIC",
+    "status": "shipped",
+    "updated": "2026-08",
+    "blurb": "Canvas field, scroll theater, Web Audio. The first prototype parked here, now living in its own repo.",
+    "href": "https://ckyb63.github.io/totally-static/",
+    "tags": ["canvas", "audio", "experiment"],
+    "art": "noise"
+  },
+  {
+    "id": "open-05",
     "title": "Awaiting payload",
     "status": "queued",
     "blurb": "Mentally reserved for the next half-baked idea that needs a public URL.",
